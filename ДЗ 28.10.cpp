@@ -95,6 +95,7 @@ class Library {
 private:
 	vector<Book> books;
 	string fileName = "lib.txt";
+	bool booksIsEmpty = false;
 
 public:
 	void RewritingFile() {
@@ -188,20 +189,41 @@ public:
 		}
 	}
 
-	void findBookISBN(int ISBN) {
+	void findBookISBN(int ISBN, bool isPrint = true) {
 		vector<Book> FindNames;
+
 		for (int i = 0; i < books.size(); i++) {
 			if (books[i].getISBN() == ISBN) {
 				FindNames.push_back(books[i]);
 			}
 		}
+		if (not isPrint) {
+			for (int i = 0; i < FindNames.size(); i++) {
+				FindNames[i].getInfo();
+			}
 
-		for (int i = 0; i < FindNames.size(); i++) {
-			FindNames[i].getInfo();
+
+			if (FindNames.empty()) { booksIsEmpty = true; }
+			else
+			{
+				booksIsEmpty = false;
+			}
 		}
 	}
 
-	void removeBook(int ISBN){}
+
+
+	void removeBook(int ISBN) {
+			int it = 0;
+			for (int i = 0; i < books.size(); i++) {
+				if (books[i].getISBN() == ISBN) {
+					books.erase(books.cbegin() + i);
+
+				}
+
+			}
+		}
+		
 };
 
 
@@ -222,14 +244,15 @@ void main() {
 
 	lib.ReadFromFile();
 
-	//lib.getLibraryInfo();
+	lib.getLibraryInfo();
 	//cout << book.getAvtor();
-
-	//lib.findBookISBN(1);
-	lib.findBookAvtor("Jack London");
+	cout << "++++++" << endl;
+	lib.findBookISBN(2);
+	//lib.findBookAvtor("Jack London");
 	//lib.findBookTitle("Jamala");
+	lib.removeBook(6);
 
-	
+	lib.getLibraryInfo();
 	
 	
 
