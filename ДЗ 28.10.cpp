@@ -95,6 +95,7 @@ class Library {
 private:
 	vector<Book> books;
 	string fileName = "lib.txt";
+	bool booksIsEmpty = false;
 
 public:
 	void RewritingFile() {
@@ -147,7 +148,10 @@ public:
 
 			while (line.find(";") != string::npos)
 			{
-				subline.push_back(line.substr(0, line.find(";")));
+				string str = line.substr(0, line.find(";"));
+				
+				str.erase(0,1);
+				subline.push_back(str);
 				line.erase(0, line.find(";")+1);
 			}
 		
@@ -175,7 +179,7 @@ public:
 	void findBookAvtor(string Avtor) {
 		vector<Book> FindNames;
 		for (int i = 0; i < books.size(); i++) {
-			if (books[i].getTitle() == Avtor) {
+			if (books[i].getAvtor() == Avtor) {
 				FindNames.push_back(books[i]);
 			}
 		}
@@ -185,20 +189,41 @@ public:
 		}
 	}
 
-	void findBookISBN(int ISBN) {
+	void findBookISBN(int ISBN, bool isPrint = true) {
 		vector<Book> FindNames;
+
 		for (int i = 0; i < books.size(); i++) {
 			if (books[i].getISBN() == ISBN) {
 				FindNames.push_back(books[i]);
 			}
 		}
+		if (not isPrint) {
+			for (int i = 0; i < FindNames.size(); i++) {
+				FindNames[i].getInfo();
+			}
 
-		for (int i = 0; i < FindNames.size(); i++) {
-			FindNames[i].getInfo();
+
+			if (FindNames.empty()) { booksIsEmpty = true; }
+			else
+			{
+				booksIsEmpty = false;
+			}
 		}
 	}
 
-	void removeBook(int ISBN){}
+
+
+	void removeBook(int ISBN) {
+			int it = 0;
+			for (int i = 0; i < books.size(); i++) {
+				if (books[i].getISBN() == ISBN) {
+					books.erase(books.cbegin() + i);
+
+				}
+
+			}
+		}
+		
 };
 
 
@@ -217,17 +242,17 @@ void main() {
 	Library lib;
 	
 
-	lib.addToLibrary(book, true);
+	lib.ReadFromFile();
 
-	lib.addToLibrary(book2);
+	lib.getLibraryInfo();
+	//cout << book.getAvtor();
+	cout << "++++++" << endl;
+	lib.findBookISBN(2);
+	//lib.findBookAvtor("Jack London");
+	//lib.findBookTitle("Jamala");
+	lib.removeBook(6);
 
-
-	
-	//lib.findBookISBN(6543246);
-
-	lib.findBookTitle("Jamala");
-
-	
+	lib.getLibraryInfo();
 	
 	
 
